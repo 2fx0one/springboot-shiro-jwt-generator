@@ -9,7 +9,7 @@ $(function () {
 			{ label: '创建时间', name: 'createTime', width: 100 }
         ],
 		viewrecords: true,
-        height: 385,
+        height: 485,
         rowNum: 10,
 		rowList : [10,30,50,100,200],
         rownumbers: true, 
@@ -39,13 +39,16 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		q:{
-			tableName: null
+			tableName: null,
+            moduleName: null
 		}
 	},
 	methods: {
 		query: function () {
 			$("#jqGrid").jqGrid('setGridParam',{ 
-                postData:{'tableName': vm.q.tableName},
+                postData:{
+                    'tableName': vm.q.tableName
+                },
                 page:1 
             }).trigger("reloadGrid");
 		},
@@ -54,7 +57,11 @@ var vm = new Vue({
             if(tableNames == null){
                 return ;
             }
-            location.href = "sys/generator/code?tables=" + tableNames.join();
+            if (!this.q.moduleName) {
+                alert("请填写模块名！")
+                return;
+            }
+            location.href = `sys/generator/code?moduleName=${this.q.moduleName}&tables=${tableNames.join()}`;
 		}
 	}
 });

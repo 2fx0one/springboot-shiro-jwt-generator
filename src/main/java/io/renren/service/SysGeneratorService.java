@@ -48,7 +48,7 @@ public class SysGeneratorService {
 		return generatorDao.queryColumns(tableName);
 	}
 
-	public byte[] generatorCode(String[] tableNames) {
+	public byte[] generatorCode(String[] tableNames, String moduleName) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ZipOutputStream zip = new ZipOutputStream(outputStream);
 
@@ -58,7 +58,7 @@ public class SysGeneratorService {
 			//查询列信息
 			List<Map<String, String>> columns = queryColumns(tableName);
 			//生成代码
-			GenUtils.generatorCode(table, columns, zip);
+			GenUtils.generatorCode(moduleName, table, columns, zip);
 		}
 		IOUtils.closeQuietly(zip);
 		return outputStream.toByteArray();
