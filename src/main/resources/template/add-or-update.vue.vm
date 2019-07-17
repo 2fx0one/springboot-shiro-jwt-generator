@@ -55,8 +55,7 @@
           if (this.dataForm.${pk.attrname}) {
             this.$http({
               url: `/${moduleName}/${pathName}/info/#[[$]]#{this.dataForm.${pk.attrname}}`,
-              method: 'get',
-              #[[params: this.$http.adornParams()]]#
+              method: 'get'
             }).then(({data}) => {
               if (data) {
 #foreach($column in $columns)
