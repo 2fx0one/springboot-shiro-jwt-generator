@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -140,7 +141,8 @@ public class GenUtils {
 
             try {
                 //添加到zip
-                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity, config.getString("package" ), config.getString("moduleName" ))));
+                String fileName = getFileName(template, tableEntity, config.getString("package"), config.getString("moduleName"));
+                zip.putNextEntry(new ZipEntry(fileName));
                 IOUtils.write(sw.toString(), zip, "UTF-8" );
                 IOUtils.closeQuietly(sw);
                 zip.closeEntry();
@@ -158,28 +160,26 @@ public class GenUtils {
         return WordUtils.capitalizeFully(columnName, new char[]{'_'}).replace("_", "" );
     }
 
+    public static String replacePrefix(String tableName, String tablePrefix) {
+        if (StringUtils.isNotBlank(tablePrefix)) {
+            tableName = tableName.replaceFirst(tablePrefix, "" );
+        }
+        return tableName;
+    }
+
     /**
      * 表名转换成Java类名
      */
     public static String tableToJava(String tableName, String tablePrefix) {
-        if (StringUtils.isNotBlank(tablePrefix)) {
-            tableName = tableName.replaceFirst(tablePrefix, "" );
-        }
-        return columnToJava(tableName);
+        return columnToJava(replacePrefix(tableName,tablePrefix));
     }
 
     public static String tableToURI(String tableName, String tablePrefix) {
-        if (StringUtils.isNotBlank(tablePrefix)) {
-            tableName = tableName.replaceFirst(tablePrefix, "" );
-        }
-        return tableName.replace("_", "/");
+        return replacePrefix(tableName,tablePrefix).replace("_", "/");
     }
 
     public static String tableToVueFilename(String tableName, String tablePrefix) {
-        if (StringUtils.isNotBlank(tablePrefix)) {
-            tableName = tableName.replaceFirst(tablePrefix, "" );
-        }
-        return tableName.replace("_", "-");
+        return replacePrefix(tableName,tablePrefix).replace("_", "-");
     }
 
 
@@ -198,6 +198,10 @@ public class GenUtils {
      * 获取文件名
      */
     public static String getFileName(String template, TableEntity tableEntity, String packageName, String moduleName) {
+
+        Function<String, String> captureName = name ->  name.substring(0, 1).toUpperCase() + name.substring(1);
+        String moduleNameCapture = captureName.apply(moduleName);
+
         String packagePath = "main" + File.separator + "java" + File.separator;
         String className =  tableEntity.getClassName();
         String vueFilename = tableEntity.getVueFilename();
