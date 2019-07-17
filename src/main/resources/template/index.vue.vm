@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('${moduleName}:${pathName}:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('${moduleName}:${pathName}:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-permission="'${moduleName}:${pathName}:save'" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-permission="'${moduleName}:${pathName}:delete'" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './${pathName}-add-or-update'
+  import AddOrUpdate from './${vueFilename}-add-or-update'
   export default {
     data () {
       return {

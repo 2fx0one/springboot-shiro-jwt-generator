@@ -23,7 +23,26 @@ public class TableEntity {
 	private String className;
 	//类名(第一个字母小写)，如：sys_user => sysUser
 	private String classname;
-	
+
+	private String controllerUri;
+	private String vueFilename;
+
+	public String getVueFilename() {
+		return vueFilename;
+	}
+
+	public void setVueFilename(String vueFilename) {
+		this.vueFilename = vueFilename;
+	}
+
+	public String getControllerUri() {
+		return controllerUri;
+	}
+
+	public void setControllerUri(String controllerUri) {
+		this.controllerUri = controllerUri;
+	}
+
 	public String getTableName() {
 		return tableName;
 	}

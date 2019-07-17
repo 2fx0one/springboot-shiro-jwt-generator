@@ -56,6 +56,15 @@ public class GenUtils {
         TableEntity tableEntity = new TableEntity();
         tableEntity.setTableName(table.get("tableName" ));
         tableEntity.setComments(table.get("tableComment" ));
+
+        //controller controllerUri
+        String controllerUri = tableToURI(tableEntity.getTableName(), config.getString("tablePrefix" ));
+        tableEntity.setControllerUri(controllerUri);
+
+        // tableToVueFilename
+        String vueFilename = tableToVueFilename(tableEntity.getTableName(), config.getString("tablePrefix" ));
+        tableEntity.setVueFilename(vueFilename);
+
         //表名转换成Java类名
         String className = tableToJava(tableEntity.getTableName(), config.getString("tablePrefix" ));
         tableEntity.setClassName(className);
@@ -108,7 +117,9 @@ public class GenUtils {
         map.put("pk", tableEntity.getPk());
         map.put("className", tableEntity.getClassName());
         map.put("classname", tableEntity.getClassname());
-        map.put("pathName", tableEntity.getClassname().toLowerCase());
+        map.put("controllerUri", tableEntity.getControllerUri());
+        map.put("vueFilename", tableEntity.getVueFilename());
+        map.put("pathName", tableEntity.getClassname());
         map.put("columns", tableEntity.getColumns());
         map.put("hasBigDecimal", hasBigDecimal);
         map.put("mainPath", mainPath);
@@ -129,7 +140,7 @@ public class GenUtils {
 
             try {
                 //添加到zip
-                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), config.getString("package" ), config.getString("moduleName" ))));
+                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity, config.getString("package" ), config.getString("moduleName" ))));
                 IOUtils.write(sw.toString(), zip, "UTF-8" );
                 IOUtils.closeQuietly(sw);
                 zip.closeEntry();
@@ -157,6 +168,21 @@ public class GenUtils {
         return columnToJava(tableName);
     }
 
+    public static String tableToURI(String tableName, String tablePrefix) {
+        if (StringUtils.isNotBlank(tablePrefix)) {
+            tableName = tableName.replaceFirst(tablePrefix, "" );
+        }
+        return tableName.replace("_", "/");
+    }
+
+    public static String tableToVueFilename(String tableName, String tablePrefix) {
+        if (StringUtils.isNotBlank(tablePrefix)) {
+            tableName = tableName.replaceFirst(tablePrefix, "" );
+        }
+        return tableName.replace("_", "-");
+    }
+
+
     /**
      * 获取配置信息
      */
@@ -171,8 +197,10 @@ public class GenUtils {
     /**
      * 获取文件名
      */
-    public static String getFileName(String template, String className, String packageName, String moduleName) {
+    public static String getFileName(String template, TableEntity tableEntity, String packageName, String moduleName) {
         String packagePath = "main" + File.separator + "java" + File.separator;
+        String className =  tableEntity.getClassName();
+        String vueFilename = tableEntity.getVueFilename();
         if (StringUtils.isNotBlank(packageName)) {
             packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
         }
@@ -202,17 +230,17 @@ public class GenUtils {
         }
 
         if (template.contains("menu.sql.vm" )) {
-            return className.toLowerCase() + "_menu.sql";
+            return className + "_menu.sql";
         }
 
         if (template.contains("index.vue.vm" )) {
             return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
-                    File.separator + moduleName + File.separator + className.toLowerCase() + ".vue";
+                    File.separator + moduleName + File.separator + vueFilename + ".vue";
         }
 
         if (template.contains("add-or-update.vue.vm" )) {
             return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
-                    File.separator + moduleName + File.separator + className.toLowerCase() + "-add-or-update.vue";
+                    File.separator + moduleName + File.separator + vueFilename + "-add-or-update.vue";
         }
 
         return null;
