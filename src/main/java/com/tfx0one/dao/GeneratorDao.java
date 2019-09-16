@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.renren.dao;
+package com.tfx0one.dao;
 
 import java.util.List;
 import java.util.Map;

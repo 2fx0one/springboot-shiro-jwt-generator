@@ -1,4 +1,4 @@
-package io.renren.utils;
+package com.tfx0one.utils;
 
 /**
  * 自定义异常

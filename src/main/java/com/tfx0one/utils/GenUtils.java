@@ -1,7 +1,7 @@
-package io.renren.utils;
+package com.tfx0one.utils;
 
-import io.renren.entity.ColumnEntity;
-import io.renren.entity.TableEntity;
+import com.tfx0one.entity.ColumnEntity;
+import com.tfx0one.entity.TableEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;

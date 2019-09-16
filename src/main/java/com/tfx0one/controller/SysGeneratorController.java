@@ -6,12 +6,12 @@
  * 版权所有，侵权必究！
  */
 
-package io.renren.controller;
+package com.tfx0one.controller;
 
-import io.renren.service.SysGeneratorService;
-import io.renren.utils.PageUtils;
-import io.renren.utils.Query;
-import io.renren.utils.R;
+import com.tfx0one.service.SysGeneratorService;
+import com.tfx0one.utils.R;
+import com.tfx0one.utils.PageUtils;
+import com.tfx0one.utils.Query;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

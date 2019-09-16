@@ -1,14 +1,14 @@
-package io.renren.dao;
+package com.tfx0one.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * Oracle代码生成器
+ * SQLServer代码生成器
  *
  * @author Mark sunlightcs@gmail.com
  * @since 2018-07-24
  */
 @Mapper
-public interface OracleGeneratorDao extends GeneratorDao {
+public interface SQLServerGeneratorDao extends GeneratorDao {
 
 }

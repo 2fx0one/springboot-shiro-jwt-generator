@@ -1,4 +1,4 @@
-package io.renren;
+package com.tfx0one;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

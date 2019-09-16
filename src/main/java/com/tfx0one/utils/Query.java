@@ -1,4 +1,4 @@
-package io.renren.utils;
+package com.tfx0one.utils;
 
 
 import java.util.LinkedHashMap;

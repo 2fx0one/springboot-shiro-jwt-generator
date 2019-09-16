@@ -6,10 +6,10 @@
  * 版权所有，侵权必究！
  */
 
-package io.renren.config;
+package com.tfx0one.config;
 
-import io.renren.dao.*;
-import io.renren.utils.RRException;
+import com.tfx0one.dao.*;
+import com.tfx0one.utils.RRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Primary;
  */
 @Configuration
 public class DbConfig {
-    @Value("${renren.database: mysql}")
+    @Value("${tfx0one.database: mysql}")
     private String database;
     @Autowired
     private MySQLGeneratorDao mySQLGeneratorDao;

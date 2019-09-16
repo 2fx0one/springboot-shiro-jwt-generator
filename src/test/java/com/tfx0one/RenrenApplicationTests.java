@@ -1,4 +1,4 @@
-package io.renren;
+package com.tfx0one;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

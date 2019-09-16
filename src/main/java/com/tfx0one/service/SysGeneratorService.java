@@ -6,14 +6,14 @@
  * 版权所有，侵权必究！
  */
 
-package io.renren.service;
+package com.tfx0one.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.renren.dao.GeneratorDao;
-import io.renren.utils.GenUtils;
-import io.renren.utils.PageUtils;
-import io.renren.utils.Query;
+import com.tfx0one.utils.GenUtils;
+import com.tfx0one.dao.GeneratorDao;
+import com.tfx0one.utils.PageUtils;
+import com.tfx0one.utils.Query;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

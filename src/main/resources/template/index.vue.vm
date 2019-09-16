@@ -52,12 +52,12 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <${classname}-add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></${classname}-add-or-update>
   </div>
 </template>
 
 <script>
-  import AddOrUpdate from './${vueFilename}-add-or-update'
+  import ${className}AddOrUpdate from './${vueFilename}-add-or-update'
   export default {
     data () {
       return {
@@ -74,7 +74,7 @@
       }
     },
     components: {
-      AddOrUpdate
+        ${className}AddOrUpdate
     },
     created () {
       this.getDataList()
