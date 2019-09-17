@@ -8,6 +8,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -135,7 +137,7 @@ public class GenUtils {
         contextMap.put("moduleName", moduleName);
         contextMap.put("author", config.getString("author"));
         contextMap.put("email", config.getString("email"));
-        contextMap.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+        contextMap.put("datetime", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
         VelocityContext context = new VelocityContext(contextMap);
 
 
