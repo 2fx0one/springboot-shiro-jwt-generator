@@ -49,8 +49,8 @@ public class SysGeneratorController {
 	 * 生成代码
 	 */
 	@RequestMapping("/code")
-	public void code(String tables, String moduleName, HttpServletResponse response) throws IOException{
-		byte[] data = sysGeneratorService.generatorCode(tables.split(","), moduleName);
+	public void code(String tables, String moduleName, String tablePrefix, HttpServletResponse response) throws IOException{
+		byte[] data = sysGeneratorService.generatorCode(tables.split(","), tablePrefix, moduleName);
 		
 		response.reset();  
         response.setHeader("Content-Disposition", "attachment; filename=\"renren.zip\"");  

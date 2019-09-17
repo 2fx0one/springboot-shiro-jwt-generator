@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -29,26 +30,31 @@ import java.util.zip.ZipOutputStream;
  */
 public class GenUtils {
 
-    public static List<String> getTemplates() {
-        List<String> templates = new ArrayList<String>();
-        templates.add("template/Entity.java.vm");
-        templates.add("template/Dao.java.vm");
-        templates.add("template/Dao.xml.vm");
-        templates.add("template/Service.java.vm");
-        templates.add("template/ServiceImpl.java.vm");
-        templates.add("template/Controller.java.vm");
-        templates.add("template/menu.sql.vm");
+    private static final String ENTITY_JAVA = "Entity.java.vm";
+    private static final String DAO_JAVA = "Dao.java.vm";
+    private static final String DAO_XML = "Dao.xml.vm";
+    private static final String SERVICE_JAVA = "Service.java.vm";
+    private static final String SERVICE_IMPL_JAVA = "ServiceImpl.java.vm";
+    private static final String CONTROLLER_JAVA = "Controller.java.vm";
+    private static final String MENU_SQL = "menu.sql.vm";
+    private static final String INDEX_VUE = "index.vue.vm";
+    private static final String ADD_OR_UPDATE_VUE = "add-or-update.vue.vm";
 
-        templates.add("template/index.vue.vm");
-        templates.add("template/add-or-update.vue.vm");
+    private static final List<String> vmFileList = Arrays.asList(
+            ENTITY_JAVA, DAO_JAVA, DAO_XML, SERVICE_JAVA, SERVICE_IMPL_JAVA, CONTROLLER_JAVA, MENU_SQL, INDEX_VUE, ADD_OR_UPDATE_VUE
+    );
 
-        return templates;
-    }
+//    private static final String TEMPLATE_DIR = "template";
+
+//    public static List<String> getTemplates() {
+//
+//        return vmFileList.stream().map(s -> TEMPLATE_DIR + "/" + s).collect(Collectors.toList());
+//    }
 
     /**
      * 生成代码
      */
-    public static void generatorCode(String moduleName, Map<String, String> table,
+    public static void generatorCode(String tablePrefix, String moduleName, Map<String, String> table,
                                      List<Map<String, String>> columns, ZipOutputStream zip) {
         //配置信息
         Configuration config = getConfig();
@@ -59,17 +65,18 @@ public class GenUtils {
         tableEntity.setComments(table.get("tableComment"));
 
         //controller controllerUri
-        String controllerUri = tableToURI(tableEntity.getTableName(), config.getString("tablePrefix"));
+        tablePrefix = tablePrefix + "_";
+        String controllerUri = tableToURI(tableEntity.getTableName(), tablePrefix);
         tableEntity.setControllerUri(controllerUri);
 
-        // tableToVueFilename
-        String vueFilename = tableToVueFilename(tableEntity.getTableName(), config.getString("tablePrefix"));
-        tableEntity.setVueFilename(vueFilename);
-
         //表名转换成Java类名
-        String className = tableToJava(tableEntity.getTableName(), config.getString("tablePrefix"));
+        String className = tableToJava(tableEntity.getTableName(), tablePrefix);
         tableEntity.setClassName(className);
         tableEntity.setClassname(StringUtils.uncapitalize(className));
+
+//         表名转成 VueFilename 使用 classname 即可
+        String vueFilename = tableToVueFilename(tableEntity.getTableName(), tablePrefix);
+        tableEntity.setVueFilename(vueFilename);
 
         //列信息
         List<ColumnEntity> columsList = new ArrayList<>();
@@ -110,75 +117,73 @@ public class GenUtils {
         prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         Velocity.init(prop);
         String mainPath = config.getString("mainPath");
-        mainPath = StringUtils.isBlank(mainPath) ? "io.renren" : mainPath;
+        mainPath = StringUtils.isBlank(mainPath) ? "io.tfx0one" : mainPath;
         //封装模板数据
-        Map<String, Object> map = new HashMap<>();
-        map.put("tableName", tableEntity.getTableName());
-        map.put("comments", tableEntity.getComments());
-        map.put("pk", tableEntity.getPk());
-        map.put("className", tableEntity.getClassName());
-        map.put("classname", tableEntity.getClassname());
-        map.put("controllerUri", tableEntity.getControllerUri());
-        map.put("vueFilename", tableEntity.getVueFilename());
-        map.put("pathName", tableEntity.getClassname());
-        map.put("columns", tableEntity.getColumns());
-        map.put("hasBigDecimal", hasBigDecimal);
-        map.put("mainPath", mainPath);
-        map.put("package", config.getString("package"));
+        Map<String, Object> contextMap = new HashMap<>();
+        contextMap.put("tableName", tableEntity.getTableName());
+        contextMap.put("comments", tableEntity.getComments());
+        contextMap.put("pk", tableEntity.getPk());
+        contextMap.put("className", tableEntity.getClassName()); //类名(第一个字母大写)
+        contextMap.put("classname", tableEntity.getClassname()); //类名(第一个字母小写)
+        contextMap.put("controllerUri", tableEntity.getControllerUri());
+        contextMap.put("pathName", tableEntity.getClassname());
+        contextMap.put("columns", tableEntity.getColumns());
+        contextMap.put("hasBigDecimal", hasBigDecimal);
+        contextMap.put("mainPath", mainPath);
+        contextMap.put("package", config.getString("package"));
 //        String moduleName = config.getString("moduleName"); //不使用配置的
-        map.put("moduleName", moduleName);
-        map.put("author", config.getString("author"));
-        map.put("email", config.getString("email"));
-        map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
-        VelocityContext context = new VelocityContext(map);
+        contextMap.put("moduleName", moduleName);
+        contextMap.put("author", config.getString("author"));
+        contextMap.put("email", config.getString("email"));
+        contextMap.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+        VelocityContext context = new VelocityContext(contextMap);
+
 
         //获取模板列表
-        List<String> templates = getTemplates();
-        for (String template : templates) {
-            //渲染模板
-            StringWriter sw = new StringWriter();
-            Template tpl = Velocity.getTemplate(template, "UTF-8");
-            tpl.merge(context, sw);
+        vmFileList.forEach(templateFilename -> {
+            //渲染模板文件
+            Template tpl = Velocity.getTemplate("template/" + templateFilename, "UTF-8");
+            StringWriter writer = new StringWriter();
+            tpl.merge(context, writer);
 
-            try {
-                //添加到zip
-                String fileName = getFileName(template, tableEntity, config.getString("package"), moduleName);
-                zip.putNextEntry(new ZipEntry(fileName));
-                IOUtils.write(sw.toString(), zip, "UTF-8");
-                IOUtils.closeQuietly(sw);
-                zip.closeEntry();
-            } catch (IOException e) {
-                throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
+            String fileName = getFileName(templateFilename, tableEntity, config.getString("package"), moduleName);
+            if (StringUtils.isNotBlank(fileName)) {
+                try {
+                    //添加到zip
+                    zip.putNextEntry(new ZipEntry(fileName));
+                    IOUtils.write(writer.toString(), zip, "UTF-8");
+                    IOUtils.closeQuietly(writer);
+                    zip.closeEntry();
+                } catch (IOException e) {
+                    throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
+                }
             }
-        }
+        });
     }
 
 
-    /**
-     * 列名转换成Java属性名
-     */
+    //列名转换成Java属性名
     public static String columnToJava(String columnName) {
         return WordUtils.capitalizeFully(columnName, new char[]{'_'}).replace("_", "");
     }
 
+
+    // 替换前缀
     public static String replacePrefix(String tableName, String tablePrefix) {
-        if (StringUtils.isNotBlank(tablePrefix)) {
-            tableName = tableName.replaceFirst(tablePrefix, "");
-        }
-        return tableName;
+        return StringUtils.isNotBlank(tablePrefix) ? tableName.replaceFirst(tablePrefix, "") : tableName;
     }
 
-    /**
-     * 表名转换成Java类名
-     */
+    //表名转换成Java类名
     public static String tableToJava(String tableName, String tablePrefix) {
         return columnToJava(replacePrefix(tableName, tablePrefix));
     }
 
+    // 表名转换成uri
     public static String tableToURI(String tableName, String tablePrefix) {
         return replacePrefix(tableName, tablePrefix).replace("_", "/");
     }
 
+    // 表名转换成vue名称 sys_user_abc ==> user-abc
     public static String tableToVueFilename(String tableName, String tablePrefix) {
         return replacePrefix(tableName, tablePrefix).replace("_", "-");
     }
@@ -201,7 +206,7 @@ public class GenUtils {
     public static String getFileName(String template, TableEntity tableEntity, String packageName, String moduleName) {
 
         Function<String, String> captureName = name -> name.substring(0, 1).toUpperCase() + name.substring(1);
-        String moduleNameCapture = captureName.apply(moduleName);
+        String moduleNameCapture = captureName.apply(moduleName); //首字母大写模块名
 
         String packagePath = "main" + File.separator + "java" + File.separator;
         String className = tableEntity.getClassName();
@@ -210,40 +215,41 @@ public class GenUtils {
             packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
         }
 
-        if (template.contains("Entity.java.vm")) {
-            return packagePath + "entity" + File.separator + className + "Entity.java";
+        Function<String, String> replaceVMSuffix = name -> name.replace(".vm", "");
+        if (template.contains(ENTITY_JAVA)) {
+            return packagePath + "entity" + File.separator + className + replaceVMSuffix.apply(ENTITY_JAVA);
         }
 
-        if (template.contains("Dao.java.vm")) {
-            return packagePath + "dao" + File.separator + className + "Dao.java";
+        if (template.contains(DAO_JAVA)) {
+            return packagePath + "dao" + File.separator + className + replaceVMSuffix.apply(DAO_JAVA);
         }
 
-        if (template.contains("Service.java.vm")) {
-            return packagePath + "service" + File.separator + className + "Service.java";
+        if (template.contains(SERVICE_JAVA)) {
+            return packagePath + "service" + File.separator + className + replaceVMSuffix.apply(SERVICE_JAVA);
         }
 
-        if (template.contains("ServiceImpl.java.vm")) {
-            return packagePath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
+        if (template.contains(SERVICE_IMPL_JAVA)) {
+            return packagePath + "service" + File.separator + "impl" + File.separator + className + replaceVMSuffix.apply(SERVICE_IMPL_JAVA);
         }
 
-        if (template.contains("Controller.java.vm")) {
-            return packagePath + "controller" + File.separator + className + "Controller.java";
+        if (template.contains(CONTROLLER_JAVA)) {
+            return packagePath + "controller" + File.separator + className + replaceVMSuffix.apply(CONTROLLER_JAVA);
         }
 
-        if (template.contains("Dao.xml.vm")) {
-            return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator + className + "Dao.xml";
+        if (template.contains(DAO_XML)) {
+            return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator + className + replaceVMSuffix.apply(DAO_XML);
         }
 
-        if (template.contains("menu.sql.vm")) {
-            return className + "_menu.sql";
+        if (template.contains(MENU_SQL)) {
+            return className + "_" + replaceVMSuffix.apply(MENU_SQL);
         }
 
-        if (template.contains("index.vue.vm")) {
+        if (template.contains(INDEX_VUE)) {
             return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + ".vue";
         }
 
-        if (template.contains("add-or-update.vue.vm")) {
+        if (template.contains(ADD_OR_UPDATE_VUE)) {
             return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + "-add-or-update.vue";
         }

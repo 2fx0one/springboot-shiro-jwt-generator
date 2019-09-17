@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import ${className}AddOrUpdate from './${vueFilename}-add-or-update'
+  import ${className}AddOrUpdate from './${classname}-add-or-update'
   export default {
     data () {
       return {

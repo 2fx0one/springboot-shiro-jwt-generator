@@ -40,6 +40,7 @@ var vm = new Vue({
 	data:{
 		q:{
 			tableName: null,
+            tablePrefix: null,
             moduleName: null
 		}
 	},
@@ -61,7 +62,11 @@ var vm = new Vue({
                 alert("请填写模块名！")
                 return;
             }
-            location.href = `sys/generator/code?moduleName=${this.q.moduleName}&tables=${tableNames.join()}`;
+            if (!this.q.tablePrefix) {
+                alert("请填写表前缀！")
+                return;
+            }
+            location.href = `sys/generator/code?moduleName=${this.q.moduleName}&tablePrefix=${this.q.tablePrefix}&tables=${tableNames.join()}`;
 		}
 	}
 });
