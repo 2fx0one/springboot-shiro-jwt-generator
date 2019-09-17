@@ -146,17 +146,18 @@ public class GenUtils {
             StringWriter writer = new StringWriter();
             tpl.merge(context, writer);
 
-            String fileName = getFileName(templateFilename, tableEntity, config.getString("package"), moduleName);
-            if (StringUtils.isNotBlank(fileName)) {
-                try {
-                    //添加到zip
-                    zip.putNextEntry(new ZipEntry(fileName));
-                    IOUtils.write(writer.toString(), zip, "UTF-8");
-                    IOUtils.closeQuietly(writer);
-                    zip.closeEntry();
-                } catch (IOException e) {
-                    throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
-                }
+            try {
+                //添加到zip
+                zip.putNextEntry(
+                        new ZipEntry(
+                                Objects.requireNonNull(getFileName(templateFilename, tableEntity, config.getString("package"), moduleName))
+                        )
+                );
+                IOUtils.write(writer.toString(), zip, "UTF-8");
+                IOUtils.closeQuietly(writer);
+                zip.closeEntry();
+            } catch (IOException e) {
+                throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
             }
         });
     }
@@ -205,15 +206,16 @@ public class GenUtils {
      */
     public static String getFileName(String template, TableEntity tableEntity, String packageName, String moduleName) {
 
-        Function<String, String> captureName = name -> name.substring(0, 1).toUpperCase() + name.substring(1);
-        String moduleNameCapture = captureName.apply(moduleName); //首字母大写模块名
+//        Function<String, String> captureName = name -> name.substring(0, 1).toUpperCase() + name.substring(1);
+//        String moduleNameCapture = captureName.apply(moduleName); //首字母大写模块名
 
         String packagePath = "main" + File.separator + "java" + File.separator;
-        String className = tableEntity.getClassName();
-        String vueFilename = tableEntity.getVueFilename();
         if (StringUtils.isNotBlank(packageName)) {
             packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
         }
+
+        String className = tableEntity.getClassName();
+        String vueFilename = tableEntity.getVueFilename();
 
         Function<String, String> replaceVMSuffix = name -> name.replace(".vm", "");
         if (template.contains(ENTITY_JAVA)) {
