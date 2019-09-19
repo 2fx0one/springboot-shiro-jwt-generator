@@ -65,9 +65,11 @@
           key: ''
         },
         dataList: [],
-        pageIndex: 1,
-        pageSize: 10,
-        totalPage: 0,
+        page:{
+          index: 1,
+          size: 10,
+          total: 0
+        },
         dataListLoading: false,
         dataListSelections: [],
         addOrUpdateVisible: false
@@ -84,33 +86,33 @@
       getDataList () {
         this.dataListLoading = true
         #[[this.$http({]]#
-          url: `/${moduleName}/${pathName}/list`,
+          url: `/${moduleName}/${controllerUri}/list`,
           method: 'get',
           #[[params: {]]#
-            'page': this.pageIndex,
-            'limit': this.pageSize,
+            'page': this.page.index,
+            'limit': this.page.size,
             'key': this.dataForm.key
           }
         }).then(({data}) => {
-          if (data ) {
+          if (data) {
             this.dataList = data.list
-            this.totalPage = data.total
+            this.page.total = data.total
           } else {
             this.dataList = []
-            this.totalPage = 0
+            this.page.total = 0
           }
           this.dataListLoading = false
         })
       },
       // 每页数
       sizeChangeHandle (val) {
-        this.pageSize = val
-        this.pageIndex = 1
+        this.page.size = val
+        this.page.index = 1
         this.getDataList()
       },
       // 当前页
       currentChangeHandle (val) {
-        this.pageIndex = val
+        this.page.index = val
         this.getDataList()
       },
       // 多选
@@ -135,8 +137,8 @@
           type: 'warning'
         }).then(() => {
           #[[this.$http({]]#
-            url: `/${moduleName}/${pathName}/delete`,
-            method: 'post',
+            url: `/${moduleName}/${controllerUri}/delete`,
+            method: 'delete',
             data: ids
           }).then(({ msg }) => {
             #[[this.$message({]]#

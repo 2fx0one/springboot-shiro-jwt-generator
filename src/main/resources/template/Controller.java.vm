@@ -34,9 +34,9 @@ public class ${className}Controller {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/list")
     @RequiresPermissions("${moduleName}:${pathName}:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R<Pagination<${className}>> list(@RequestParam Map<String, Object> params){
         Pagination page = ${classname}Service.queryPage(params);
 
         return R.ok(page);
@@ -46,9 +46,9 @@ public class ${className}Controller {
     /**
      * 信息
      */
-    @RequestMapping("/info/{${pk.attrname}}")
+    @GetMapping("/info/{${pk.attrname}}")
     @RequiresPermissions("${moduleName}:${pathName}:info")
-    public R info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
+    public R<${className}> info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
 		${className}Entity ${classname} = ${classname}Service.getById(${pk.attrname});
 
         return R.ok(${classname});
@@ -57,7 +57,7 @@ public class ${className}Controller {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/save")
     @RequiresPermissions("${moduleName}:${pathName}:save")
     public R save(@RequestBody ${className}Entity ${classname}){
 		${classname}Service.save(${classname});
@@ -68,7 +68,7 @@ public class ${className}Controller {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/update")
     @RequiresPermissions("${moduleName}:${pathName}:update")
     public R update(@RequestBody ${className}Entity ${classname}){
 		${classname}Service.updateById(${classname});
@@ -79,7 +79,7 @@ public class ${className}Controller {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping("/delete")
     @RequiresPermissions("${moduleName}:${pathName}:delete")
     public R delete(@RequestBody ${pk.attrType}[] ${pk.attrname}s){
 		${classname}Service.removeByIds(Arrays.asList(${pk.attrname}s));

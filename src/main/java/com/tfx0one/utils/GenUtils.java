@@ -9,7 +9,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -73,8 +71,8 @@ public class GenUtils {
 
         //表名转换成Java类名
         String className = tableToJava(tableEntity.getTableName(), tablePrefix);
-        tableEntity.setClassName(className);
-        tableEntity.setClassname(StringUtils.uncapitalize(className));
+        tableEntity.setUpperCaseClassName(className);
+        tableEntity.setLowerCaseClassName(StringUtils.uncapitalize(className));
 
 //         表名转成 VueFilename 使用 classname 即可
         String vueFilename = tableToVueFilename(tableEntity.getTableName(), tablePrefix);
@@ -125,10 +123,10 @@ public class GenUtils {
         contextMap.put("tableName", tableEntity.getTableName());
         contextMap.put("comments", tableEntity.getComments());
         contextMap.put("pk", tableEntity.getPk());
-        contextMap.put("className", tableEntity.getClassName()); //类名(第一个字母大写)
-        contextMap.put("classname", tableEntity.getClassname()); //类名(第一个字母小写)
+        contextMap.put("className", tableEntity.getUpperCaseClassName()); //类名(第一个字母大写)
+        contextMap.put("classname", tableEntity.getLowerCaseClassName()); //类名(第一个字母小写)
         contextMap.put("controllerUri", tableEntity.getControllerUri());
-        contextMap.put("pathName", tableEntity.getClassname());
+        contextMap.put("pathName", tableEntity.getLowerCaseClassName());
         contextMap.put("columns", tableEntity.getColumns());
         contextMap.put("hasBigDecimal", hasBigDecimal);
         contextMap.put("mainPath", mainPath);
@@ -171,14 +169,14 @@ public class GenUtils {
     }
 
 
-    // 替换前缀
-    public static String replacePrefix(String tableName, String tablePrefix) {
-        return StringUtils.isNotBlank(tablePrefix) ? tableName.replaceFirst(tablePrefix, "") : tableName;
-    }
-
     //表名转换成Java类名
     public static String tableToJava(String tableName, String tablePrefix) {
         return columnToJava(replacePrefix(tableName, tablePrefix));
+    }
+
+    // 替换前缀
+    public static String replacePrefix(String tableName, String tablePrefix) {
+        return StringUtils.isNotBlank(tablePrefix) ? tableName.replaceFirst(tablePrefix, "") : tableName;
     }
 
     // 表名转换成uri
@@ -216,7 +214,7 @@ public class GenUtils {
             packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
         }
 
-        String className = tableEntity.getClassName();
+        String className = tableEntity.getUpperCaseClassName();
         String vueFilename = tableEntity.getVueFilename();
 
         Function<String, String> replaceVMSuffix = name -> name.replace(".vm", "");
@@ -249,12 +247,12 @@ public class GenUtils {
         }
 
         if (template.contains(INDEX_VUE)) {
-            return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
+            return "vue" + File.separator + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + ".vue";
         }
 
         if (template.contains(ADD_OR_UPDATE_VUE)) {
-            return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
+            return "vue" + File.separator + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + "-add-or-update.vue";
         }
 

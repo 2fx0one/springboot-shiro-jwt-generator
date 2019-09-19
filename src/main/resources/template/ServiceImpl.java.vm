@@ -20,7 +20,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${clas
     public Pagination queryPage(Map<String, Object> params) {
         IPage<${className}Entity> page = this.page(
                 new QueryPage<${className}Entity>().getPage(params),
-                new LambdaQueryWrapper<${className}Entity>()
+                Wrappers.<${className}>lambdaQuery()
         );
 
         return new Pagination(page);

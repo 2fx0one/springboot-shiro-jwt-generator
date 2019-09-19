@@ -1,5 +1,7 @@
 package com.tfx0one.entity;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,7 @@ import java.util.List;
  * @email sunlightcs@gmail.com
  * @date 2016年12月20日 上午12:02:55
  */
+@Data
 public class TableEntity {
 	//表的名称
 	private String tableName;
@@ -20,63 +23,10 @@ public class TableEntity {
 	private List<ColumnEntity> columns;
 	
 	//类名(第一个字母大写)，如：sys_user => SysUser
-	private String className;
+	private String upperCaseClassName;
 	//类名(第一个字母小写)，如：sys_user => sysUser
-	private String classname;
+	private String lowerCaseClassName;
 
 	private String controllerUri;
 	private String vueFilename;
-
-	public String getVueFilename() {
-		return vueFilename;
-	}
-
-	public void setVueFilename(String vueFilename) {
-		this.vueFilename = vueFilename;
-	}
-
-	public String getControllerUri() {
-		return controllerUri;
-	}
-
-	public void setControllerUri(String controllerUri) {
-		this.controllerUri = controllerUri;
-	}
-
-	public String getTableName() {
-		return tableName;
-	}
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-	public String getComments() {
-		return comments;
-	}
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-	public ColumnEntity getPk() {
-		return pk;
-	}
-	public void setPk(ColumnEntity pk) {
-		this.pk = pk;
-	}
-	public List<ColumnEntity> getColumns() {
-		return columns;
-	}
-	public void setColumns(List<ColumnEntity> columns) {
-		this.columns = columns;
-	}
-	public String getClassName() {
-		return className;
-	}
-	public void setClassName(String className) {
-		this.className = className;
-	}
-	public String getClassname() {
-		return classname;
-	}
-	public void setClassname(String classname) {
-		this.classname = classname;
-	}
 }

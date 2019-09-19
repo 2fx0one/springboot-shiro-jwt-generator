@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("io.renren.dao")
-public class RenrenApplication {
+public class CodeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RenrenApplication.class, args);
+        SpringApplication.run(CodeApplication.class, args);
     }
 }
