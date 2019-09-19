@@ -23,7 +23,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${clas
                 Wrappers.<${className}>lambdaQuery()
         );
 
-        return new Pagination(page);
+        return new Pagination<>(page);
     }
 
 }
