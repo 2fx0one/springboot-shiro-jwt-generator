@@ -15,6 +15,6 @@ import java.util.Map;
  */
 public interface ${className}Service extends IService<${className}Entity> {
 
-    Pagination<${className}Entity> queryPage(Map<String, Object> params);
+    Pagination<${className}Entity> queryPage(Map<String, Object> params, ${className}Entity ${classname});
 }
 

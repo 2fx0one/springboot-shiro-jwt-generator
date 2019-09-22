@@ -17,7 +17,7 @@ import ${package}.${moduleName}.service.${className}Service;
 public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${className}Entity> implements ${className}Service {
 
     @Override
-    public Pagination<${className}Entity> queryPage(Map<String, Object> params) {
+    public Pagination<${className}Entity> queryPage(Map<String, Object> params, ${className}Entity ${classname}) {
         IPage<${className}Entity> page = this.page(
                 new QueryPage<${className}Entity>().getPage(params),
                 Wrappers.<${className}Entity>lambdaQuery()

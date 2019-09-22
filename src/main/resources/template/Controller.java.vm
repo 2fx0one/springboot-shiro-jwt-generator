@@ -32,8 +32,8 @@ public class ${className}Controller {
      */
     @GetMapping("/list")
     @RequiresPermissions("${moduleName}:${pathName}:list")
-    public R<Pagination<${className}Entity>> list(@RequestParam Map<String, Object> params){
-        Pagination<${className}Entity> page = ${classname}Service.queryPage(params);
+    public R<Pagination<${className}Entity>> list(@RequestParam Map<String, Object> params, ${className}Entity ${classname}){
+        Pagination<${className}Entity> page = ${classname}Service.queryPage(params, ${classname});
 
         return R.ok(page);
     }

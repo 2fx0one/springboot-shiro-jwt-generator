@@ -211,9 +211,14 @@ public class GenUtils {
 //        Function<String, String> captureName = name -> name.substring(0, 1).toUpperCase() + name.substring(1);
 //        String moduleNameCapture = captureName.apply(moduleName); //首字母大写模块名
 
-        String packagePath = "main" + File.separator + "java" + File.separator;
+        String javaBasePath = "java" + File.separator + "src" + File.separator + "main" + File.separator;
+        String javaPackagePath = javaBasePath + "java" + File.separator;
+        String javaResourcesPath = javaBasePath + "resource" + File.separator;
+
+        String vuePath = "vue" + File.separator;
+
         if (StringUtils.isNotBlank(packageName)) {
-            packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
+            javaPackagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
         }
 
         String className = tableEntity.getUpperCaseClassName();
@@ -221,27 +226,27 @@ public class GenUtils {
 
         Function<String, String> replaceVMSuffix = name -> name.replace(".vm", "");
         if (template.contains(ENTITY_JAVA)) {
-            return packagePath + "entity" + File.separator + className + replaceVMSuffix.apply(ENTITY_JAVA);
+            return javaPackagePath + "entity" + File.separator + className + replaceVMSuffix.apply(ENTITY_JAVA);
         }
 
         if (template.contains(DAO_JAVA)) {
-            return packagePath + "dao" + File.separator + className + replaceVMSuffix.apply(DAO_JAVA);
+            return javaPackagePath + "dao" + File.separator + className + replaceVMSuffix.apply(DAO_JAVA);
         }
 
         if (template.contains(SERVICE_JAVA)) {
-            return packagePath + "service" + File.separator + className + replaceVMSuffix.apply(SERVICE_JAVA);
+            return javaPackagePath + "service" + File.separator + className + replaceVMSuffix.apply(SERVICE_JAVA);
         }
 
         if (template.contains(SERVICE_IMPL_JAVA)) {
-            return packagePath + "service" + File.separator + "impl" + File.separator + className + replaceVMSuffix.apply(SERVICE_IMPL_JAVA);
+            return javaPackagePath + "service" + File.separator + "impl" + File.separator + className + replaceVMSuffix.apply(SERVICE_IMPL_JAVA);
         }
 
         if (template.contains(CONTROLLER_JAVA)) {
-            return packagePath + "controller" + File.separator + className + replaceVMSuffix.apply(CONTROLLER_JAVA);
+            return javaPackagePath + "controller" + File.separator + className + replaceVMSuffix.apply(CONTROLLER_JAVA);
         }
 
         if (template.contains(DAO_XML)) {
-            return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator + className + replaceVMSuffix.apply(DAO_XML);
+            return javaResourcesPath + File.separator + "mapper" + File.separator + moduleName + File.separator + className + replaceVMSuffix.apply(DAO_XML);
         }
 
         if (template.contains(MENU_SQL)) {
@@ -249,18 +254,18 @@ public class GenUtils {
         }
 
         if (template.contains(INDEX_VUE)) {
-            return "vue" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
+            return vuePath + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + ".vue";
         }
 
 
         if (template.contains(API_JS_VM)) {
-            return "vue" + File.separator + "src" + File.separator + "api" + File.separator + moduleName + File.separator + vueFilename + ".js";
+            return vuePath + "src" + File.separator + "api" + File.separator + moduleName + File.separator + vueFilename + ".js";
         }
 
 
         if (template.contains(ADD_OR_UPDATE_VUE)) {
-            return "vue" + File.separator + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
+            return vuePath + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + "-add-or-update.vue";
         }
 
