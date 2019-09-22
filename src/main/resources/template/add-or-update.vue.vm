@@ -20,10 +20,9 @@
 </template>
 
 <script>
-    import {save, update} from '@/api/'
-
-    export default {
-  data () {
+import { get${className}Info, save${className}, update${className} } from '@/api/${moduleName}/${vueFilename}'
+export default {
+  data() {
     return {
       visible: false,
       dataForm: {
@@ -55,7 +54,7 @@
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
         if (this.dataForm.${pk.attrname}) {
-          get${className}Info(this.dataForm.${pk.attrname}).then(({data}) => {
+          get${className}Info(this.dataForm.${pk.attrname}).then(({ data }) => {
             if (data) {
 #foreach($column in $columns)
 #if($column.columnName != $pk.columnName)
