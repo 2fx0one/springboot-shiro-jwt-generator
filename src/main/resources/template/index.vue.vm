@@ -58,7 +58,7 @@
 
 <script>
 import ${className}AddOrUpdate from './${classname}-add-or-update'
-import { get${className}list, del${className} } from '@/api/${moduleName}/${vueFilename}'
+import { get${className}List, del${className} } from '@/api/${moduleName}/${vueFilename}'
 export default {
   data () {
     return {
@@ -77,16 +77,16 @@ export default {
     }
   },
   components: {
-      ${className}AddOrUpdate
+    ${className}AddOrUpdate
   },
   created () {
     this.getDataList()
   },
   methods: {
     // 获取数据列表
-    getDataList () {
+    getDataList() {
       this.dataListLoading = true
-      get${className}list({
+      get${className}List({
         'page': this.page.index,
         'limit': this.page.size,
         'key': this.dataForm.key
@@ -102,29 +102,29 @@ export default {
       })
     },
     // 每页数
-    sizeChangeHandle (val) {
+    sizeChangeHandle(val) {
       this.page.size = val
       this.page.index = 1
       this.getDataList()
     },
     // 当前页
-    currentChangeHandle (val) {
+    currentChangeHandle(val) {
       this.page.index = val
       this.getDataList()
     },
     // 多选
-    selectionChangeHandle (val) {
+    selectionChangeHandle(val) {
       this.dataListSelections = val
     },
     // 新增 / 修改
-    addOrUpdateHandle (id) {
+    addOrUpdateHandle(id) {
       this.addOrUpdateVisible = true
       this.#[[$]]#nextTick(() => {
         this.$refs.addOrUpdate.init(id)
       })
     },
     // 删除
-    deleteHandle (id) {
+    deleteHandle(id) {
       const ids = id ? [id] : this.dataListSelections.map(item => item.id)
       #[[this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {]]#
         confirmButtonText: '确定',
