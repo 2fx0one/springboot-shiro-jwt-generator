@@ -1,0 +1,40 @@
+import request from '@/utils/request'
+
+export function get${className}List(params) {
+  return request({
+    url: '/${moduleName}/${controllerUri}/list',
+    method: 'get',
+    params
+  })
+}
+
+export function get${className}Info(id) {
+  return request({
+    url: `/${moduleName}/${controllerUri}/info/#[[$]]#{id}`,
+    method: 'get'
+  })
+}
+
+export function update${className}(data) {
+  return request({
+    url: '/${moduleName}/${controllerUri}/update',
+    method: 'put',
+    data
+  })
+}
+
+export function save${className}(data) {
+  return request({
+    url: '/${moduleName}/${controllerUri}/save',
+    method: 'post',
+    data: data
+  })
+}
+
+export function del${className}(data) {
+  return request({
+    url: `/${moduleName}/${controllerUri}/delete`,
+    method: 'delete',
+    data
+  })
+}

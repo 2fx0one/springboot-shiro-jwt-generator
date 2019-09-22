@@ -38,10 +38,11 @@ public class GenUtils {
     private static final String CONTROLLER_JAVA = "Controller.java.vm";
     private static final String MENU_SQL = "menu.sql.vm";
     private static final String INDEX_VUE = "index.vue.vm";
+    private static final String API_JS_VM = "api.js.vm";
     private static final String ADD_OR_UPDATE_VUE = "add-or-update.vue.vm";
 
     private static final List<String> vmFileList = Arrays.asList(
-            ENTITY_JAVA, DAO_JAVA, DAO_XML, SERVICE_JAVA, SERVICE_IMPL_JAVA, CONTROLLER_JAVA, MENU_SQL, INDEX_VUE, ADD_OR_UPDATE_VUE
+            ENTITY_JAVA, DAO_JAVA, DAO_XML, SERVICE_JAVA, SERVICE_IMPL_JAVA, CONTROLLER_JAVA, MENU_SQL, INDEX_VUE, API_JS_VM, ADD_OR_UPDATE_VUE
     );
 
 //    private static final String TEMPLATE_DIR = "template";
@@ -126,6 +127,7 @@ public class GenUtils {
         contextMap.put("className", tableEntity.getUpperCaseClassName()); //类名(第一个字母大写)
         contextMap.put("classname", tableEntity.getLowerCaseClassName()); //类名(第一个字母小写)
         contextMap.put("controllerUri", tableEntity.getControllerUri());
+        contextMap.put("vueFilename", tableEntity.getVueFilename());
         contextMap.put("pathName", tableEntity.getLowerCaseClassName());
         contextMap.put("columns", tableEntity.getColumns());
         contextMap.put("hasBigDecimal", hasBigDecimal);
@@ -247,9 +249,15 @@ public class GenUtils {
         }
 
         if (template.contains(INDEX_VUE)) {
-            return "vue" + File.separator + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
+            return "vue" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
                     File.separator + moduleName + File.separator + vueFilename + ".vue";
         }
+
+
+        if (template.contains(API_JS_VM)) {
+            return "vue" + File.separator + "src" + File.separator + "api" + File.separator + moduleName + File.separator + vueFilename + ".js";
+        }
+
 
         if (template.contains(ADD_OR_UPDATE_VUE)) {
             return "vue" + File.separator + File.separator + "src" + File.separator + "views" + File.separator + "modules" +

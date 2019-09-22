@@ -53,7 +53,7 @@ public class SysGeneratorController {
 		byte[] data = sysGeneratorService.generatorCode(tables.split(","), tablePrefix, moduleName);
 		
 		response.reset();  
-        response.setHeader("Content-Disposition", "attachment; filename=\"renren.zip\"");  
+        response.setHeader("Content-Disposition", "attachment; filename=\"genCode.zip\"");
         response.addHeader("Content-Length", "" + data.length);  
         response.setContentType("application/octet-stream; charset=UTF-8");  
   
