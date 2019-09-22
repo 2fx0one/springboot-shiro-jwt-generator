@@ -60,13 +60,16 @@
 import ${className}AddOrUpdate from './${classname}-add-or-update'
 import { get${className}List, del${className} } from '@/api/${moduleName}/${vueFilename}'
 export default {
-  data () {
+  components: {
+    ${className}AddOrUpdate
+  },
+  data() {
     return {
       dataForm: {
         key: ''
       },
       dataList: [],
-      page:{
+      page: {
         index: 1,
         size: 10,
         total: 0
@@ -76,10 +79,7 @@ export default {
       addOrUpdateVisible: false
     }
   },
-  components: {
-    ${className}AddOrUpdate
-  },
-  created () {
+  created() {
     this.getDataList()
   },
   methods: {
@@ -90,7 +90,7 @@ export default {
         'page': this.page.index,
         'limit': this.page.size,
         'key': this.dataForm.key
-      }).then(({data}) => {
+      }).then(({ data }) => {
         if (data) {
           this.dataList = data.list
           this.page.total = data.total
