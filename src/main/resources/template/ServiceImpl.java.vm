@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ${mainPath}.common.utils.Pagination;
-import ${mainPath}.common.utils.QueryPage;
+import ${mainPath}.common.utils.Query;
 
 import ${package}.${moduleName}.dao.${className}Dao;
 import ${package}.${moduleName}.entity.${className}Entity;
@@ -19,11 +19,11 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${clas
     @Override
     public Pagination<${className}Entity> queryPage(Map<String, Object> params, ${className}Entity ${classname}) {
         IPage<${className}Entity> page = this.page(
-                new QueryPage<${className}Entity>().getPage(params),
+                Query.page(params),
                 Wrappers.<${className}Entity>lambdaQuery()
         );
 
-        return new Pagination<>(page);
+        return Pagination.create(page);
     }
 
 }
