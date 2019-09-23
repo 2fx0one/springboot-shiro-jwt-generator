@@ -118,7 +118,7 @@ public class GenUtils {
         prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         Velocity.init(prop);
         String mainPath = config.getString("mainPath");
-        mainPath = StringUtils.isBlank(mainPath) ? "io.tfx0one" : mainPath;
+        mainPath = StringUtils.isBlank(mainPath) ? "com.tfx0one" : mainPath;
         //封装模板数据
         Map<String, Object> contextMap = new HashMap<>();
         contextMap.put("tableName", tableEntity.getTableName());
