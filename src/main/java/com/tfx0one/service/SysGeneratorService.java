@@ -10,6 +10,7 @@ package com.tfx0one.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.tfx0one.controller.GenQuery;
 import com.tfx0one.utils.GenUtils;
 import com.tfx0one.dao.GeneratorDao;
 import com.tfx0one.utils.PageUtils;
@@ -48,17 +49,17 @@ public class SysGeneratorService {
 		return generatorDao.queryColumns(tableName);
 	}
 
-	public byte[] generatorCode(String[] tableNames, String tablePrefix, String moduleName) {
+	public byte[] generatorCode(GenQuery query) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		ZipOutputStream zip = new ZipOutputStream(outputStream);
 
-		for(String tableName : tableNames){
+		for(String tableName : query.getTables().split(",")){
 			//查询表信息
 			Map<String, String> table = queryTable(tableName);
 			//查询列信息
 			List<Map<String, String>> columns = queryColumns(tableName);
 			//生成单表对应代码
-			GenUtils.generatorCode(tablePrefix, moduleName, table, columns, zip);
+			GenUtils.generatorCode(query, table, columns, zip);
 		}
 		IOUtils.closeQuietly(zip);
 		return outputStream.toByteArray();
