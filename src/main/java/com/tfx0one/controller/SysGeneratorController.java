@@ -56,10 +56,9 @@ public class SysGeneratorController {
     @RequestMapping("/code")
     public void code(GenQuery query,
                      HttpServletResponse response) throws IOException {
-//        byte[] data = sysGeneratorService.generatorCode(tables.split(","), tablePrefix, moduleName);
         byte[] data = sysGeneratorService.generatorCode(query);
 
-        String zipFileName = "genCode" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".zip";
+        String zipFileName = "genCode_" + DateFormatUtils.format(new Date(), "yyyyMMdd_HHmmss") + ".zip";
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=\"" + zipFileName + "\"");
         response.addHeader("Content-Length", "" + data.length);
