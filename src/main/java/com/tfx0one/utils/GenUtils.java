@@ -213,7 +213,7 @@ public class GenUtils {
 
         String javaBasePath = "java" + File.separator + "src" + File.separator + "main" + File.separator;
         String javaPackagePath = javaBasePath + "java" + File.separator;
-        String javaResourcesPath = javaBasePath + "resource" + File.separator;
+        String javaResourcesPath = javaBasePath + "resources" + File.separator;
 
         String vuePath = "vue" + File.separator;
 
