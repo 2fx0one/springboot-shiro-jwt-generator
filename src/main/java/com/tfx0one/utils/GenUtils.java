@@ -1,5 +1,6 @@
 package com.tfx0one.utils;
 
+import com.tfx0one.controller.GenQuery;
 import com.tfx0one.entity.ColumnEntity;
 import com.tfx0one.entity.TableEntity;
 import org.apache.commons.configuration.Configuration;
@@ -55,8 +56,13 @@ public class GenUtils {
     /**
      * 生成代码
      */
-    public static void generatorCode(String tablePrefix, String moduleName, Map<String, String> table,
+    public static void generatorCode(GenQuery query, Map<String, String> table,
                                      List<Map<String, String>> columns, ZipOutputStream zip) {
+
+        String tablePrefix = query.getTablePrefix();
+        String moduleName = query.getModuleName();
+        String packageName = query.getPackageName();  //config.getString("package");
+
         //配置信息
         Configuration config = getConfig();
         boolean hasBigDecimal = false;
@@ -96,7 +102,7 @@ public class GenUtils {
             //列的数据类型，转换成Java类型
             String attrType = config.getString(columnEntity.getDataType(), "unknowType");
             columnEntity.setAttrType(attrType);
-            if (!hasBigDecimal && attrType.equals("BigDecimal")) {
+            if (!hasBigDecimal && "BigDecimal".equals(attrType)) {
                 hasBigDecimal = true;
             }
             //是否主键
@@ -124,15 +130,17 @@ public class GenUtils {
         contextMap.put("tableName", tableEntity.getTableName());
         contextMap.put("comments", tableEntity.getComments());
         contextMap.put("pk", tableEntity.getPk());
-        contextMap.put("className", tableEntity.getUpperCaseClassName()); //类名(第一个字母大写)
-        contextMap.put("classname", tableEntity.getLowerCaseClassName()); //类名(第一个字母小写)
+        //类名(第一个字母大写)
+        contextMap.put("className", tableEntity.getUpperCaseClassName());
+        //类名(第一个字母小写)
+        contextMap.put("classname", tableEntity.getLowerCaseClassName());
         contextMap.put("controllerUri", tableEntity.getControllerUri());
         contextMap.put("vueFilename", tableEntity.getVueFilename());
         contextMap.put("pathName", tableEntity.getLowerCaseClassName());
         contextMap.put("columns", tableEntity.getColumns());
         contextMap.put("hasBigDecimal", hasBigDecimal);
         contextMap.put("mainPath", mainPath);
-        contextMap.put("package", config.getString("package"));
+        contextMap.put("package", packageName);
 //        String moduleName = config.getString("moduleName"); //不使用配置的
         contextMap.put("moduleName", moduleName);
         contextMap.put("author", config.getString("author"));
@@ -152,7 +160,7 @@ public class GenUtils {
                 //添加到zip
                 zip.putNextEntry(
                         new ZipEntry(
-                                Objects.requireNonNull(getFileName(templateFilename, tableEntity, config.getString("package"), moduleName))
+                                Objects.requireNonNull(getFileName(templateFilename, tableEntity, packageName, moduleName))
                         )
                 );
                 IOUtils.write(writer.toString(), zip, "UTF-8");
