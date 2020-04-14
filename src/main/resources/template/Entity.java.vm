@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 #end
 import java.io.Serializable;
 import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Data;
 import lombok.experimental.Accessors;
 /**
