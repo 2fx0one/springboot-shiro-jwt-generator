@@ -160,7 +160,7 @@ public class GenUtils {
                 //添加到zip
                 zip.putNextEntry(
                         new ZipEntry(
-                                Objects.requireNonNull(getFileName(templateFilename, tableEntity, packageName, moduleName))
+                                getFileName(templateFilename, tableEntity, packageName, moduleName)
                         )
                 );
                 IOUtils.write(writer.toString(), zip, "UTF-8");
@@ -214,7 +214,7 @@ public class GenUtils {
     /**
      * 获取文件名
      */
-    public static String getFileName(String template, TableEntity tableEntity, String packageName, String moduleName) {
+    private static String getFileName(String template, TableEntity tableEntity, String packageName, String moduleName) {
 
 //        Function<String, String> captureName = name -> name.substring(0, 1).toUpperCase() + name.substring(1);
 //        String moduleNameCapture = captureName.apply(moduleName); //首字母大写模块名
