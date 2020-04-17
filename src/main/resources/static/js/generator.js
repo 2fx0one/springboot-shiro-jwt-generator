@@ -40,7 +40,7 @@ var vm = new Vue({
   data: {
     tableName: null,
     q: {
-      packageName: 'com.tfx0one.rhinoceros.sys',
+      packageName: 'com.tfx0one.module.sys',
       tablePrefix: 'sys',
       moduleName: 'sys'
     }
